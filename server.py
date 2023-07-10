@@ -157,6 +157,7 @@ def generate_token(response, body=None, method: hug.types.one_of(['url', 'qrcode
 
 		# Set current period
 		client.calculated_period = __get_current_period(client)
+		print(client.calculated_period)
 		client.activated_period = __get_current_period(client, False, None, True)
 
 		saved_clients[token] = {
@@ -219,16 +220,25 @@ def __get_current_period(client: pronotepy.Client, wantSpecificPeriod: bool = Fa
 				return client.current_period
 			
 			allPeriods = []
+			currentPeriods = []
 
 			for period in client.periods:
 				if period.name.split(' ')[0] == CURRENT_PERIOD_NAME:
-					if not wantAllPeriods:   
-						raw = datetime.datetime.now().date()
-						now = datetime.datetime(raw.year, raw.month, raw.day)
-						if period.start <= now <= period.end:
-							return period
-					else:
-						allPeriods.append(period)
+					currentPeriods.append(period)
+
+			for i in range(len(currentPeriods)):
+				period = currentPeriods[i]
+				if not wantAllPeriods:   
+					raw = datetime.datetime.now().date()
+					now = datetime.datetime(raw.year, raw.month, raw.day)
+
+					if period.start <= now <= period.end:
+						return period
+
+					if i == len(currentPeriods) - 1:
+						return period
+				else:
+					allPeriods.append(period)
 			
 			return allPeriods
 		else:
