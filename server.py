@@ -218,11 +218,10 @@ def __get_current_period(client: pronotepy.Client, wantSpecificPeriod: bool = Fa
 				print("WARN: Couldn't find current period name")
 				return client.current_period
 			
-			if wantAllPeriods: allPeriods = []
+			allPeriods = []
 
 			for period in client.periods:
 				if period.name.split(' ')[0] == CURRENT_PERIOD_NAME:
-					
 					if not wantAllPeriods:   
 						raw = datetime.datetime.now().date()
 						now = datetime.datetime(raw.year, raw.month, raw.day)
